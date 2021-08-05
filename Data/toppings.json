@@ -1,0 +1,22 @@
+[
+    {
+        "ToppingId": 1,
+        "ToppingName": "Pepperoni",
+        "ToppingPrice": 12
+    },
+    {
+        "ToppingId": 2,
+        "ToppingName": "Sausage",
+        "ToppingPrice": 10
+    },
+    {
+        "ToppingId": 3,
+        "ToppingName": "Margherita",
+        "ToppingPrice": 9.9
+    },
+    {
+        "ToppingId": 4,
+        "ToppingName": "Cheese",
+        "ToppingPrice": 8
+    }
+]
