@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace PizzaStore.Models
+﻿namespace PizzaStore.Models
 {
     public class Topping
     {
-        public int ToppingId { get; set; }
-        public string ToppingName { get; set; }
-        public decimal ToppingPrice { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Price { get; set; }
     }
 }

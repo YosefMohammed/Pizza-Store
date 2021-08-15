@@ -4,9 +4,9 @@ namespace PizzaStore.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public int Id { get; set; }
+        public List<PizzaWithTopping> Pizzas { get; set; } = new List<PizzaWithTopping>();
+        public List<Topping> Toppings { get; set; } = new List<Topping>();
         public decimal TotalCost { get; set; }
-    
-        public List<PizzaWithToppings> Pizzas { get; set; } = new List<PizzaWithToppings>();        
     }
 }

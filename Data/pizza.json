@@ -1,50 +1,50 @@
-[
-    {
-        "PizzaId": 1,
-        "Name": "Cheddar Cheese",
-        "Price": 105,
-        "Ingredients": "Our pizza sauce combined with authentic Cheddar cheese and Mozzarella."
-    },
-    {
-        "PizzaId": 2,
-        "Name": "Hot Spicy",
-        "Price": 115,
-        "Ingredients": "Italian Sausage, Tomato, Onions, Green Pepper, Jalapeno"
-    },
-    {
-        "PizzaId": 3,
-        "Name": "Little Italy",
-        "Price": 130,
-        "Ingredients": "Pepperoni, Italian Sausage, Fresh Mushroom, Black Olives, Oregano"
-    },
-    {
-        "PizzaId": 4,
-        "Name": "Chicken BBQ",
-        "Price": 130,
-        "Ingredients": "Grilled Chicken, Onions, Fresh Mushroom, BBQ Sauce"
-    },
-    {
-        "PizzaId": 5,
-        "Name": "Cha Cha",
-        "Price": 130,
-        "Ingredients": "Grilled Chicken, Chicken Sausage, Onions, Green Pepper"
-    },
-    {
-        "PizzaId": 6,
-        "Name": "Mexican Ole",
-        "Price": 130,
-        "Ingredients": "Grilled Chicken, Tomato, Onions, Green Pepper, Fresh Mushroom, Jalapeno"
-    },
-    {
-        "PizzaId": 7,
-        "Name": "Chicken Ranch",
-        "Price": 135,
-        "Ingredients": "Grilled Chicken, Tomato, Fresh Mushroom, Ranch Sauce"
-    },
-    {
-        "PizzaId": 8,
-        "Name": "Margherita",
-        "Price": 100,
-        "Ingredients": "Mozzarella Cheese and Pizza Sauce"
-    }
+﻿[
+  {
+    "Id": 1,
+    "Name": "Cheddar Cheese",
+    "Price": 105,
+    "Ingredients": "Our pizza sauce combined with authentic Cheddar cheese and Mozzarella."
+  },
+  {
+    "Id": 2,
+    "Name": "Hot Spicy",
+    "Price": 115,
+    "Ingredients": "Italian Sausage, Tomato, Onions, Green Pepper, Jalapeno"
+  },
+  {
+    "Id": 3,
+    "Name": "Little Italy",
+    "Price": 130,
+    "Ingredients": "Pepperoni, Italian Sausage, Fresh Mushroom, Black Olives, Oregano"
+  },
+  {
+    "Id": 4,
+    "Name": "Chicken BBQ",
+    "Price": 130,
+    "Ingredients": "Grilled Chicken, Onions, Fresh Mushroom, BBQ Sauce"
+  },
+  {
+    "Id": 5,
+    "Name": "Cha Cha",
+    "Price": 130,
+    "Ingredients": "Grilled Chicken, Chicken Sausage, Onions, Green Pepper"
+  },
+  {
+    "Id": 6,
+    "Name": "Mexican Ole",
+    "Price": 130,
+    "Ingredients": "Grilled Chicken, Tomato, Onions, Green Pepper, Fresh Mushroom, Jalapeno"
+  },
+  {
+    "Id": 7,
+    "Name": "Chicken Ranch",
+    "Price": 135,
+    "Ingredients": "Grilled Chicken, Tomato, Fresh Mushroom, Ranch Sauce"
+  },
+  {
+    "Id": 8,
+    "Name": "Margherita",
+    "Price": 100,
+    "Ingredients": "Mozzarella Cheese and Pizza Sauce"
+  }
 ]

@@ -1,118 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PizzaStore.Models;
-using PizzaStore.Repository;
+using PizzaStore.Repositories;
 using Spectre.Console;
 
 namespace PizzaStore
 {
     class Program
     {
-        static int ReadIntegerInput()
-        {
-            var res = Console.ReadLine();
-            
-            if(string.IsNullOrEmpty(res))
-            {
-                return -1;
-            }
-            var valid = int.TryParse(res, out var answer);
-            return valid ? answer : -1;
-        }
         static void Main()
         {
             var pizzaRepository = new PizzaRepository();
             var toppingRepository = new ToppingRepository();
             var orderRepository = new OrderRepository();
 
-            AnsiConsole.WriteLine("Welcome to Pizza Store");
+            AnsiConsole.WriteLine("Welcome to pizza store!");
             while (true)
             {
-                AnsiConsole.WriteLine("Do you want to make a new order or check your old orders? 1 for new order, 2 for old orders, 0 to exit: ");
+                var answer = AnsiConsole.Prompt(
+                    new TextPrompt<int>("Do you want to make a new order or check your old orders? 1 for new order, 2 for old orders, 0 to exit")
+                        .Validate(input =>
+                        {
+                            return input switch
+                            {
+                                < 0 => ValidationResult.Error("[red]Invalid input[/]"),
+                                > 2 => ValidationResult.Error("[red]Invalid input[/]"),
+                                _ => ValidationResult.Success(),
+                            };
+                        }));
 
-                var answer = ReadIntegerInput();
-                if(answer == -1) 
-                {
-                    System.Console.WriteLine("Invalid Input");
-                    continue;
-                }
                 var order = new Order();
+
                 if (answer == 1)
                 {
-                    while(true) 
+                    //Making an order
+                    while (true)
                     {
-                        //make a new order
                         PizzaRepository.DisplayPizzaTable(pizzaRepository.PizzaList);
-                        Console.WriteLine("Please choose your pizza");
 
-                        var orderChoice = ReadIntegerInput();
+                        var choosingPizza = AnsiConsole.Prompt(
+                            new TextPrompt<int>("Please choose your pizza")
+                                .Validate(pizzaId =>
+                                    pizzaRepository.GetPizzaById(pizzaId) == null ? 
+                                        ValidationResult.Error("[red]Invalid input[/]") : ValidationResult.Success()));
 
-                        var getPizza = pizzaRepository.GetPizzaById(orderChoice);
-                        if(getPizza == null) 
+                        var getPizza = pizzaRepository.GetPizzaById(choosingPizza);
+
+                        var pizzaWithToppings = new PizzaWithTopping()
                         {
-                            System.Console.WriteLine("This pizza doesn't not exist");
-                            continue;
-                        }
-                        var pizzaWithTopping = new PizzaWithToppings() {
-                            PizzaId = getPizza.PizzaId,
-                            Toppings = new List<int>()
+                            Id = getPizza.Id,
+                            ToppingList = new List<int>()
                         };
+                        
                         order.TotalCost += getPizza.Price;
 
                         while (true)
                         {
-                            Console.WriteLine("Do you like to add any toppings on your pizza? y for yes, n for no");
+                            //Adding topping
+                            var addTopping = AnsiConsole.Confirm("Do you want to add any topping on your pizza? y for [green]Yes[/], n for [red]No[/]");
 
-                            //add extra topping
-                            var addToppings = Console.ReadLine();
-                            if (addToppings.Trim().ToLower() == "y")
+                            if (addTopping)
                             {
-                            
-                                //choosing topping 
-                                Console.WriteLine("Please choose your extra topping.");
                                 ToppingRepository.DisplayToppingTable(toppingRepository.ToppingList);
-                                var toppingChoice = ReadIntegerInput();
-                                
-                                if(toppingChoice == -1)
-                                {
-                                    System.Console.WriteLine("Invalid input");
-                                    continue;
-                                }
 
-                                var getTopping = toppingRepository.GetToppingById(toppingChoice);
-                                
-                                if(getTopping == null)
-                                {
-                                    System.Console.WriteLine("This topping doesn't exist");
-                                    continue;
-                                }
-                                pizzaWithTopping.Toppings.Add(getTopping.ToppingId);
-                                order.TotalCost += getTopping.ToppingPrice;
+                                var chooseTopping = AnsiConsole.Prompt(
+                                    new TextPrompt<int>("Please Choose your extra topping.")
+                                        .Validate(toppingId =>
+                                            toppingRepository.GetToppingById(toppingId) == null ? 
+                                                ValidationResult.Error("[red]Invalid input[/]") : ValidationResult.Success()));
+
+                                var getTopping = toppingRepository.GetToppingById(chooseTopping);
+
+                                pizzaWithToppings.ToppingList.Add(getTopping.Id);
+                                order.TotalCost += getTopping.Price;
+                                order.Toppings.Add(getTopping);
                             }
                             else
                             {
-                                order.Pizzas.Add(pizzaWithTopping);
+                                order.Pizzas.Add(pizzaWithToppings);
                                 break;
                             }
                         }
-                        System.Console.WriteLine($"Pizza count => {order.Pizzas.Count}");
-                        Console.WriteLine("Do you like to add another pizza? y for yes, n for no");
-                        var addAnotherPizza = Console.ReadLine();
 
-                        if (addAnotherPizza.Trim().ToLower() == "n") 
+                        AnsiConsole.WriteLine($"Pizza count => {order.Pizzas.Count}");
+
+                        // AnsiConsole.Prompt(new TextPrompt<String>("[grey]Press any key to go to main menu[/]").AllowEmpty()); 
+                        if (AnsiConsole.Confirm("Do you want to add another pizza? y for [green]Yes[/] n for [red]No[/]"))
+                            continue;
+                        else
                             break;
                     }
+
                     orderRepository.AddOrder(order);
                 }
+
                 else if (answer == 2)
                 {
-                    //view order list
-                    foreach(var o in orderRepository.OrderList)
+                    //Viewing order list
+                    foreach (var o in orderRepository.OrderList)
                         OrderRepository.DisplayOrderTable(o);
                 }
-                else if(answer == 0)
+
+                else if (answer == 0)
                 {
-                    System.Console.WriteLine("Goodbey!");
+                    //Good bye
+                    AnsiConsole.WriteLine("Good Bye!");
                     orderRepository.Dispose();
                     break;
                 }

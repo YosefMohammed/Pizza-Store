@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PizzaStore.Models;
 using Spectre.Console;
 
-namespace PizzaStore.Repository
+namespace PizzaStore.Repositories
 {
     public class PizzaRepository
     {
@@ -11,14 +12,13 @@ namespace PizzaStore.Repository
         {
             PizzaList = JsonManager.ReadJsonFile<IEnumerable<Pizza>>(@"./Data/pizza.json");
         }
+        public IEnumerable<Pizza> PizzaList {get; set;}
         
-        public IEnumerable<Pizza> PizzaList {get;set;}
-
         public Pizza GetPizzaById(int id)
         {
-            return PizzaList.Where(p => p.PizzaId == id).FirstOrDefault();
+            return PizzaList.Where(p => p.Id == id).FirstOrDefault();
         }
-
+        
         public static void DisplayPizzaTable(IEnumerable<Pizza> pizzas) 
         {
             var pizzaTable = new Table();
@@ -30,7 +30,7 @@ namespace PizzaStore.Repository
             {
                 var rows = new List<Markup>
                 {
-                    new Markup(pizza.PizzaId.ToString()),
+                    new Markup(pizza.Id.ToString()),
                     new Markup(pizza.Name),
                     new Markup(pizza.Ingredients.ToString()),
                     new Markup(pizza.Price.ToString()),
@@ -38,6 +38,11 @@ namespace PizzaStore.Repository
                 pizzaTable.AddRow(rows);
             }
             AnsiConsole.Render(pizzaTable);
+        }
+
+        public static implicit operator PizzaRepository(Pizza v)
+        {
+            throw new NotImplementedException();
         }
     }
 }
