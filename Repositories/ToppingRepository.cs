@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 using PizzaStore.Models;
 using Spectre.Console;
 
@@ -7,11 +10,6 @@ namespace PizzaStore.Repositories
 {
     public class ToppingRepository
     {
-        public ToppingRepository()
-        {
-            ToppingList = JsonManager.ReadJsonFile<IEnumerable<Topping>>(@"./Data/toppings.json");
-        }
-
         public IEnumerable<Topping> ToppingList { get; set; }
 
         public Topping GetToppingById(int id)
@@ -37,6 +35,20 @@ namespace PizzaStore.Repositories
             }
 
             AnsiConsole.Render(toppingTable);
+        }
+        
+        public async Task GetToppingFromApi()
+        {
+            var httpClient = new HttpClient();
+            var httpResponse = await httpClient.GetAsync("https://localhost:5001/Topping");
+            var topping = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var res = JsonSerializer.Deserialize<List<Topping>>(topping, options);
+            
+            ToppingList = res;
         }
     }
 }

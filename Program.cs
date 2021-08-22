@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using PizzaStore.Models;
 using PizzaStore.Repositories;
 using Spectre.Console;
@@ -7,12 +9,17 @@ namespace PizzaStore
 {
     class Program
     {
-        static void Main()
+        static async Task Main()
         {
             var pizzaRepository = new PizzaRepository();
             var toppingRepository = new ToppingRepository();
             var orderRepository = new OrderRepository();
 
+            await pizzaRepository.GetPizzaFromApi();
+            await toppingRepository.GetToppingFromApi();
+            await orderRepository.GetOrdersFromApi();
+            
+            
             AnsiConsole.WriteLine("Welcome to pizza store!");
             while (true)
             {
@@ -83,31 +90,34 @@ namespace PizzaStore
 
                         AnsiConsole.WriteLine($"Pizza count => {order.Pizzas.Count}");
 
-                        // AnsiConsole.Prompt(new TextPrompt<String>("[grey]Press any key to go to main menu[/]").AllowEmpty()); 
                         if (AnsiConsole.Confirm("Do you want to add another pizza? y for [green]Yes[/] n for [red]No[/]"))
                             continue;
                         else
                             break;
                     }
-
-                    orderRepository.AddOrder(order);
+                    await orderRepository.PostOrderToApi(order);
+                    // orderRepository.AddOrder(order);
                 }
 
                 else if (answer == 2)
                 {
                     //Viewing order list
+                    await orderRepository.GetOrdersFromApi();
                     foreach (var o in orderRepository.OrderList)
-                        OrderRepository.DisplayOrderTable(o);
+                        OrderRepository.DisplayOrderTable(o, pizzaRepository.PizzaList.ToList(), toppingRepository.ToppingList.ToList());
+                    
                 }
 
                 else if (answer == 0)
                 {
                     //Good bye
                     AnsiConsole.WriteLine("Good Bye!");
-                    orderRepository.Dispose();
                     break;
                 }
+                
             }
         }
+
+        
     }
 }

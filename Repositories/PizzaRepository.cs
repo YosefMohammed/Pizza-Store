@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 using PizzaStore.Models;
 using Spectre.Console;
 
@@ -8,10 +11,7 @@ namespace PizzaStore.Repositories
 {
     public class PizzaRepository
     {
-        public PizzaRepository()
-        {
-            PizzaList = JsonManager.ReadJsonFile<IEnumerable<Pizza>>(@"./Data/pizza.json");
-        }
+        
         public IEnumerable<Pizza> PizzaList {get; set;}
         
         public Pizza GetPizzaById(int id)
@@ -19,8 +19,9 @@ namespace PizzaStore.Repositories
             return PizzaList.Where(p => p.Id == id).FirstOrDefault();
         }
         
-        public static void DisplayPizzaTable(IEnumerable<Pizza> pizzas) 
+        public static void DisplayPizzaTable(IEnumerable<Pizza> pizzas)
         {
+            // var repository = new PizzaRepository();
             var pizzaTable = new Table();
             pizzaTable.AddColumn(new TableColumn("Pizza Number"));
             pizzaTable.AddColumn(new TableColumn("Name"));
@@ -40,9 +41,18 @@ namespace PizzaStore.Repositories
             AnsiConsole.Render(pizzaTable);
         }
 
-        public static implicit operator PizzaRepository(Pizza v)
+        public async Task GetPizzaFromApi()
         {
-            throw new NotImplementedException();
+            var httpClient = new HttpClient();
+            var httpResponse = await httpClient.GetAsync("https://localhost:5001/Pizza");
+            var pizza = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var res = JsonSerializer.Deserialize<List<Pizza>>(pizza, options);
+            
+            PizzaList = res;
         }
     }
 }
